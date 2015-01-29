@@ -15,8 +15,6 @@
 
 int shell(FILE* src, int mode);
 int spawnComm(char* comm);
-int dummyProc(char* comm);
-int shell(char* command);
 int parseCommand(char* com);
 
 int main(int argc, char** argv) {
@@ -94,17 +92,8 @@ int spawnComm(char* comm) {
 		perror("Error creating process");
 		return -1;
 	} else if(proc == 0) { // Child process {
-		exit(dummyProc(comm));
+		exit(parseCommand(comm));
 	}
-
-	return 0;
-}
-
-/**
-* Dummy function for processing a command.  Replace with AJ's function.
-**/
-int dummyProc(char* comm) {
-	printf("%s\n", comm);
 
 	return 0;
 }
@@ -114,6 +103,8 @@ int dummyProc(char* comm) {
  * and then runs the command
  * @argument com, the command to parse and run
  * @returns 0 if successful, -1 if error
+ *
+ * @author Andrew Burns
  **/
 int parseCommand(char* com){
 	char* args[MAX_ARGS];
