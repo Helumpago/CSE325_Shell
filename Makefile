@@ -4,7 +4,7 @@ ARGS=-g -Wall
 OUT=o.exe
 
 main:
-	$(CC) $(ARGS) main.c -o o.exe
+	$(CC) $(ARGS) shell.c -o shell
 
 clean:
 	rm -f *.exe *.o
