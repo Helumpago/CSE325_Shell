@@ -1,9 +1,10 @@
 
 #include <stdio.h>
 
-#define PROMPT "RedPizzaBaron> "
+#define PROMPT "RedPizzaBaron"
 #define INTER 0
 #define BATCH 1
+#define BUFFSIZE 1024
 
 int shell(FILE* src, int mode);
 
@@ -28,9 +29,19 @@ int main(int argc, char** argv) {
 * Takes in input from the specified file and parses each command
 * @param FILE* src File from which commands should be taken
 * @param int mode Terminal mode. 0 means interactive, 1 means batch
+*
+* @return 0 for success, -1 for failure.
+*
+* @author William Rosenberger
 **/
 int shell(FILE* src, int mode) {
-	printf("Doing stuff\n");
+	char buff[BUFFSIZE];
+
+	int quit = 0;
+	while(!quit) {
+		printf("%s> ", PROMPT);
+		fgets(buff, BUFFSIZE, src);
+	}
 
 	return 0;
 }
