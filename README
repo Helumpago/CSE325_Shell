@@ -1,10 +1,23 @@
 Authors: Andrew (AJ) Burns, William Rosenberger
 
-Introductions:
+Introduction:
+	The goal of this project is to create a basic shell.  It will be capable of executing in two modes: Interactive and batch mode. Commands will also be able to be run in parallel.
 
+Usage:
+	There are 2 ways of using our shell: interactive and batch.
+		Interactive:
+			./shell
+		Batch:
+			./shell [batchfile]
 
-Explanations:
+	Commands to the shell are formated as follows:
+		[bash command] [args]
+	Execute commands in parallel:
+		[bash command] [args] ; [bash command] [args] ...
 
+	Note: commands in files are formated in the same way. Each line is executed sequentially. 
 
 Testing:
+	We ran the included "batch" file to test the shell. This included bad commands, good commands, and multipile commands on 1 line.
 
+	Note: in batch mode it is working as expected that sometimes the command name is printed seperately from the command output due to threading. 

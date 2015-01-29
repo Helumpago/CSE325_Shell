@@ -29,8 +29,9 @@
 #define MAX_ARGS 32
 
 int shell(FILE* src, int mode);
-int spawnComm(char* comm);
-int parseCommand(char* com);
+int spawnComm(char* comm, int mode);
+int parseCommand(char* com, int mode);
+char* stripWhiteSpace(char* string);
 
 int main(int argc, char** argv) {
 	if(argc == 1) { // No arguments implies interactive mode
@@ -81,11 +82,16 @@ int shell(FILE* src, int mode) {
 		int numCom = 0;
 		char* currCom = NULL;
 		for(currCom = strtok(buff, ";"); currCom != NULL; currCom = strtok(NULL, ";"), numCom++) {
+
+			currCom = stripWhiteSpace(currCom); // strip whitespace from commands
+
 			if(strncmp(currCom, "quit", 5) == 0) { // If user requested to quit, finish running commands on this line, but don't take in more input
 				breakLoop = 1;
 			}
 
-			spawnComm(currCom);
+			if(strncmp(currCom, "quit", 5) != 0){
+				spawnComm(currCom, mode);
+			}
 		}
 
 		/* Wait for all procs to finish */
@@ -100,14 +106,14 @@ int shell(FILE* src, int mode) {
 /**
 * Spawns a new process for executing a process
 */
-int spawnComm(char* comm) {
+int spawnComm(char* comm, int mode) {
 	pid_t proc = fork();
 
 	if(proc < 0) {
 		perror("Error creating process");
 		return -1;
 	} else if(proc == 0) { // Child process 
-		exit(parseCommand(comm));
+		exit(parseCommand(comm, mode));
 	}
 
 	return 0;
@@ -121,9 +127,14 @@ int spawnComm(char* comm) {
  *
  * @author Andrew Burns
  **/
-int parseCommand(char* com){
+int parseCommand(char* com, int mode){
 	char* args[MAX_ARGS];
 	int i;
+
+	// print command in batch mode
+	if(mode == BATCH){
+			printf("%s\n", com);
+	}
 
 	// get first token
 	args[0] = strtok(com, " ");
@@ -134,6 +145,7 @@ int parseCommand(char* com){
 		
 	}
 
+
 	// execute command
 	if(execvp(args[0], args) == -1){
 		perror("Error executing command(s)");
@@ -141,4 +153,21 @@ int parseCommand(char* com){
 	}
 
 	return 0;
+}
+
+/**
+ * strips whitespace from begining and end of string
+ * @param string: the string to strip whitespace from
+ * @returns: the string with stripped whitespace
+ *
+ * @author Will and Andrew
+ **/
+char* stripWhiteSpace(char* string) {
+	for(; *string == ' '; string++); // Strip leading whitespace
+
+	char* startWhite = string + strlen(string) - 1;
+	for(; *startWhite == ' '; startWhite--); // Find first whitespace on the end of the string
+	*(startWhite + 1) = '\0';
+
+	return string;
 }

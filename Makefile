@@ -1,10 +1,10 @@
 
-CC=clang
+CC=gcc
 ARGS=-g -Wall
-OUT=o.exe
+OUT=shell
 
 main:
-	$(CC) $(ARGS) shell.c -o shell
+	$(CC) $(ARGS) shell.c -o $(OUT)
 
 clean:
-	rm -f *.exe *.o
+	rm -f $(OUT) *.o

@@ -1,0 +1,7 @@
+ls -lah    ;ps;  echo "sup world"  
+echo quit
+cd .
+pwd
+cdasdf
+echo
+diff
