@@ -37,11 +37,16 @@ int main(int argc, char** argv) {
 int shell(FILE* src, int mode) {
 	char buff[BUFFSIZE];
 
-	int quit = 0;
-	while(!quit) {
-		printf("%s> ", PROMPT);
-		fgets(buff, BUFFSIZE, src);
+	while(fgets(buff, BUFFSIZE, src)) {
+		if(mode == INTER)
+			printf("%s> ", PROMPT);
+		if(feof(src))
+			break;
+
+		printf("%s\n", buff);
 	}
+
+	printf("\n");
 
 	return 0;
 }
