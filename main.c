@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <string.h>
 
 #define PROMPT "RedPizzaBaron"
 #define INTER 0
@@ -43,7 +44,7 @@ int shell(FILE* src, int mode) {
 
 		fgets(buff, BUFFSIZE, src);
 
-		if(feof(src)) // If end-of-file was recieved, exit
+		if(feof(src) || strncmp(buff, "quit\n", 5) == 0) // If user requested to quit, exit
 			break;
 
 		printf("%s", buff);
