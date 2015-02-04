@@ -37,13 +37,16 @@ int main(int argc, char** argv) {
 int shell(FILE* src, int mode) {
 	char buff[BUFFSIZE];
 
-	while(fgets(buff, BUFFSIZE, src)) {
-		if(mode == INTER)
+	while(1) {
+		if(mode == INTER) // Only prompt if in interactive mode
 			printf("%s> ", PROMPT);
-		if(feof(src))
+
+		fgets(buff, BUFFSIZE, src);
+
+		if(feof(src)) // If end-of-file was recieved, exit
 			break;
 
-		printf("%s\n", buff);
+		printf("%s", buff);
 	}
 
 	printf("\n");
