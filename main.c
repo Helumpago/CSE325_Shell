@@ -36,21 +36,29 @@ int main(int argc, char** argv) {
 * @author William Rosenberger
 **/
 int shell(FILE* src, int mode) {
+	int breakLoop = 0;
 	char buff[BUFFSIZE];
 
-	while(1) {
+	while(breakLoop == 0) {
 		if(mode == INTER) // Only prompt if in interactive mode
 			printf("%s> ", PROMPT);
 
+		/* Get user input */
 		fgets(buff, BUFFSIZE, src);
-
-		if(feof(src) || strncmp(buff, "quit\n", 5) == 0) // If user requested to quit, exit
+		if(feof(src)) // If user requested to quit, exit
 			break;
 
-		printf("%s", buff);
-	}
+		/* Parse input */
+		char* currCom = strtok(buff, ";");
+		for(; currCom != NULL; currCom = strtok(NULL, ";")) {
+			if(strncmp(buff, "quit\n", 5) == 0) { // If user requested to quit, exit
+				breakLoop = 1;
+				break;
+			}
 
-	printf("\n");
+			printf("%s\n", currCom);
+		}
+	}
 
 	return 0;
 }
