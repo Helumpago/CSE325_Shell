@@ -46,13 +46,18 @@ int shell(FILE* src, int mode) {
 
 		/* Get user input */
 		fgets(buff, BUFFSIZE, src);
-		if(feof(src)) // If user requested to quit, exit
+		buff[strlen(buff) - 1] = '\0'; // Strip newline
+
+		if(feof(src)) { // If user requested to quit, exit
+			printf("\n");
 			break;
+		}
+
 
 		/* Parse input */
 		char* currCom = NULL;
 		for(currCom = strtok(buff, ";"); currCom != NULL; currCom = strtok(NULL, ";")) {
-			if(strncmp(currCom, "quit\n", 5) == 0) { // If user requested to quit, exit
+			if(strncmp(currCom, "quit", 5) == 0) { // If user requested to quit, exit
 				breakLoop = 1;
 				break;
 			}
