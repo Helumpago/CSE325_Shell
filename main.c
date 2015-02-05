@@ -48,11 +48,10 @@ int shell(FILE* src, int mode) {
 		fgets(buff, BUFFSIZE, src);
 		buff[strlen(buff) - 1] = '\0'; // Strip newline
 
-		if(feof(src)) { // If user requested to quit, exit
+		if(feof(src)) { // Exit when end of file reached
 			printf("\n");
 			break;
 		}
-
 
 		/* Parse input */
 		char* currCom = NULL;
@@ -62,9 +61,9 @@ int shell(FILE* src, int mode) {
 				break;
 			}
 
-			/* Quit with error value if any of the commands error */
+			/* Call command */
 			int retVal = dummyExec(currCom);
-			if(retVal != 0) {
+			if(retVal != 0) { // Quit with error value if any of the commands error
 				return retVal;
 			}
 		}
