@@ -8,6 +8,7 @@
 #define BUFFSIZE 1024
 
 int shell(FILE* src, int mode);
+int dummyExec(char* comm);
 
 int main(int argc, char** argv) {
 	if(argc == 1) { // No arguments implies interactive mode
@@ -49,16 +50,29 @@ int shell(FILE* src, int mode) {
 			break;
 
 		/* Parse input */
-		char* currCom = strtok(buff, ";");
-		for(; currCom != NULL; currCom = strtok(NULL, ";")) {
-			if(strncmp(buff, "quit\n", 5) == 0) { // If user requested to quit, exit
+		char* currCom = NULL;
+		for(currCom = strtok(buff, ";"); currCom != NULL; currCom = strtok(NULL, ";")) {
+			if(strncmp(currCom, "quit\n", 5) == 0) { // If user requested to quit, exit
 				breakLoop = 1;
 				break;
 			}
 
-			printf("%s\n", currCom);
+			/* Quit with error value if any of the commands error */
+			int retVal = dummyExec(currCom);
+			if(retVal != 0) {
+				return retVal;
+			}
 		}
 	}
+
+	return 0;
+}
+
+/**
+* Dummy function for executing an individual command. Replace with AJ's function.
+*/
+int dummyExec(char* comm) {
+	printf("%s\n", comm);
 
 	return 0;
 }
