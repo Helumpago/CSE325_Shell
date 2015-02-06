@@ -1,6 +1,10 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #define PROMPT "RedPizzaBaron"
 #define INTER 0
@@ -8,7 +12,8 @@
 #define BUFFSIZE 1024
 
 int shell(FILE* src, int mode);
-int dummyExec(char* comm);
+int spawnComm(char* comm);
+int dummyProc(char* comm);
 
 int main(int argc, char** argv) {
 	if(argc == 1) { // No arguments implies interactive mode
@@ -54,18 +59,21 @@ int shell(FILE* src, int mode) {
 		}
 
 		/* Parse input */
+		int numCom = 0;
 		char* currCom = NULL;
-		for(currCom = strtok(buff, ";"); currCom != NULL; currCom = strtok(NULL, ";")) {
-			if(strncmp(currCom, "quit", 5) == 0) { // If user requested to quit, exit
+		for(currCom = strtok(buff, ";"); currCom != NULL; currCom = strtok(NULL, ";"), numCom++) {
+			if(strncmp(currCom, "quit", 5) == 0) { // If user requested to quit, finish running commands on this line, but don't take in more input
 				breakLoop = 1;
-				break;
 			}
 
 			/* Call command */
-			int retVal = dummyExec(currCom);
-			if(retVal != 0) { // Quit with error value if any of the commands error
-				return retVal;
-			}
+			spawnComm(currCom);
+		}
+
+		/* Wait for all procs to finish */
+		for(; numCom > 0; numCom--) {
+			printf("Done\n");
+			wait(NULL);
 		}
 	}
 
@@ -73,9 +81,25 @@ int shell(FILE* src, int mode) {
 }
 
 /**
-* Dummy function for executing an individual command. Replace with AJ's function.
+* Spawns a new process for executing a process
 */
-int dummyExec(char* comm) {
+int spawnComm(char* comm) {
+	pid_t proc = fork();
+
+	if(proc < 0) {
+		perror("Error creating process");
+		return -1;
+	} else if(proc == 0) { // Child process {
+		exit(dummyProc(comm));
+	}
+
+	return 0;
+}
+
+/**
+* Dummy function for processing a command.  Replace with AJ's function.
+**/
+int dummyProc(char* comm) {
 	printf("%s\n", comm);
 
 	return 0;
