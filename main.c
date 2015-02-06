@@ -18,7 +18,7 @@ int dummyProc(char* comm);
 int main(int argc, char** argv) {
 	if(argc == 1) { // No arguments implies interactive mode
 		shell(stdin, INTER);
-	} else if(argc > 1) { // Batch mode
+	} else if(argc == 2) { // Batch mode
 		/* Open batch file */
 		FILE* src = fopen(argv[1], "r");
 		if(src == NULL) {
@@ -27,6 +27,8 @@ int main(int argc, char** argv) {
 		}
 
 		shell(src, BATCH);
+	} else {
+		fprintf(stderr, "Program expects at most one argument (the batch file)\n");
 	}
 
 	return 0;
@@ -66,13 +68,11 @@ int shell(FILE* src, int mode) {
 				breakLoop = 1;
 			}
 
-			/* Call command */
 			spawnComm(currCom);
 		}
 
 		/* Wait for all procs to finish */
 		for(; numCom > 0; numCom--) {
-			printf("Done\n");
 			wait(NULL);
 		}
 	}
